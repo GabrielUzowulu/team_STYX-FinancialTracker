@@ -19,11 +19,11 @@
           </li>
           
           <li class="nav-item">
-            <a class="nav-link" href="">Meet the Team</a>
+            <a class="nav-link" href="team.php">Meet the Team</a>
           </li>
           
           <li class="nav-item">
-            <a class="nav-link" href="team.html">FAQ</a>
+            <a class="nav-link" href="#">FAQ</a>
           </li>
           
           <li class="nav-item">
