@@ -1,6 +1,60 @@
-<?php 
-  ob_start();
-  include('includes/config.php'); 
+<?php
+
+    session_start();
+    
+    $uemail = $_GET['useremail'];
+    $timedate = $_GET['log'];
+    $decodetimedate = base64_decode($timedate);
+    
+    date_default_timezone_set('Africa/Lagos');
+	$checktime = date('H:i');
+	
+	$hour1 = preg_replace("/[^0-9]/", "", $decodetimedate);
+    $hour2 = preg_replace("/[^0-9]/", "", $checktime);
+
+    
+    $diff = $hour2 - $hour1;
+    // var_dump($diff);
+    
+    if ($diff > 10) {
+        header('location:forgot_password.php');
+    }
+    
+    
+    if (empty($uemail) && empty($timedate)) {
+        header('location:forgot_password.php');
+    } else {
+    
+        ob_start();
+        include('includes/config.php');
+      
+        /*====== Authentication to reset password ======*/
+    	if(isset($_POST['reset'])) {
+            
+    		$uemail = $_GET['useremail'];
+    		
+    		$npword = $_POST['npword'];
+    		$cpword = $_POST['cpword'];
+    		$hash = md5($npword);
+    		
+    		if ($npword !== $cpword) {
+    			echo "<script>alert('Passwords do not match');
+    			window.history.back();</script>";
+    		} else {   
+    		    
+    		    $query = mysqli_query($conn, "UPDATE users SET pword = '$hash' WHERE email = '$uemail' ");
+    		    
+    		    if($query) {
+    		        $msg = "Password has been reset, proceed to login";
+    		    } else {
+    		        $error = "Something went wrong, please try again";
+    		    }
+    		    
+    		}
+    
+    	    
+    	}
+	
 ?>
 
 <!DOCTYPE html>
@@ -24,20 +78,12 @@
       height: 100%;
     }
 
-    .mt-5{
-      font-size: 13px
-    }
-
     @media (max-width: 768px) {
       html,
       body,
       header,
       .view {
         height: 100%;
-      }
-      
-      .navbar {
-        background-color: #1C2331; 
       }
 
     }
@@ -48,27 +94,11 @@
       }
 
     }
-    
-    .navbar {
-      box-shadow: none;
-    }
-
-    .nav-link {
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    .nav-item {
-      padding-right: 30px;
-    }
 
   </style>
 </head>
 
 <body>
-    
-  <?php include('includes/navbar.php'); ?>
-  
 
   <div class="view full-page-intro" style="background-image: url('landing.jpg'); background-repeat: no-repeat; background-size: cover;">
 
@@ -94,29 +124,44 @@
           <div class="col-md-6 col-xl-5">
             <div class="card mb-5 login-form">
               <div class="card-body">
-                <form name="" action="includes/authentication.php" method="post">
+                <form name="" action="" method="post">
 
                   <h3 class="dark-grey-text text-center">
-                    <strong>FORGOT PASSWORD</strong>
+                    <strong>RESET PASSWORD</strong>
                   </h3>
                   <hr>
+                  
+                    <!---Success Message--->
+                    <?php if($msg){ ?>
+                    <div class="alert alert-success" role="alert">
+                    <strong>Well done!</strong> <?php echo htmlentities($msg);?>
+                    </div>
+                    <?php } ?>
+                    
+                    <!---Error Message--->
+                    <?php if($error){ ?>
+                    <div class="alert alert-danger" role="alert">
+                    <strong>Oh snap!</strong> <?php echo htmlentities($error);?></div>
+                    <?php } ?>
 
                   <div class="md-form">
-                    <i class="fas fa-envelope prefix grey-text"></i>
-                    <input type="email" name="email" class="form-control" required>
-                    <label for="form2">Email</label>
+                    <i class="fas fa-lock prefix grey-text"></i>
+                    <input type="password" name="npword" class="form-control" required>
+                    <label for="form2">Password</label>
+                  </div>
+
+                  <div class="md-form">
+                    <i class="fas fa-lock prefix grey-text"></i>
+                    <input type="password" name="cpword" class="form-control" required>
+                    <label for="form2">Confirm Password</label>
                   </div>
                   
                   <div class="text-center">
-                    <button class="btn btn-indigo" type="submit" name="forgot">SUBMIT</button>
+                    <button class="btn btn-indigo" type="submit" name="reset">RESET</button>
+                    <hr>
+                    <p>Already have an account? <a href="index.php">Sign In</a></p>
                   </div>
 
-                  <div class="mt-5">
-                  
-                    <p class="text-center">I know my password now <a href="index.php" class="signUpLink">Sign In</a> || Don't have an account? <a href="signup.php" class="signUpLink">Sign Up</a></p>
-                  
-                  </div>
-                  
                 </form>
 
               </div>
@@ -149,3 +194,5 @@
 </body>
 
 </html>
+
+<?php } ?>
