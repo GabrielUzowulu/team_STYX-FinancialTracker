@@ -1,3 +1,8 @@
+<?php 
+  ob_start();
+  include('includes/config.php'); 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +14,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body class="teamBody">
+     <?php include('includes/navbar.php'); ?>
     <h3 class="text-center mb-5">MEET THE TEAM</h3>
     <div class="row mb-2">
         <div class="col-2 col-md-1"></div>
