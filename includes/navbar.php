@@ -19,7 +19,7 @@
           </li>
           
           <li class="nav-item">
-            <a class="nav-link" href="">Meet the Team</a>
+            <a class="nav-link" href="team.html">Meet the Team</a>
           </li>
           
           <li class="nav-item">
